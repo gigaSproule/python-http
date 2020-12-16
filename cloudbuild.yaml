@@ -1,0 +1,26 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/python-http', '.' ]
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [ 'push', 'gcr.io/$PROJECT_ID/python-http' ]
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'python-http'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/python-http'
+      - '--port'
+      - '5000'
+      - '--region'
+      - 'us-east1'
+      - '--platform'
+      - 'managed'
+      - '--cpu'
+      - '1'
+      - '--memory'
+      - '128Mi'
+      - '--allow-unauthenticated'
+images:
+  - 'gcr.io/$PROJECT_ID/python-http'
